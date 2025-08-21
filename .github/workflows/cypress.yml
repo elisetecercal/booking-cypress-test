@@ -5,9 +5,21 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Show workspace files
+        run: |
+          pwd
+          ls -la
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npx cypress run
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run Cypress headless
+        run: npx cypress run
