@@ -29,7 +29,6 @@ export const HomePage = {
       .as("dest")
       .scrollIntoView()
       .click({ force: true })
-      .clear()
       .type(city, { delay: 50, force: true });
 
     // Wait until the combobox opens
