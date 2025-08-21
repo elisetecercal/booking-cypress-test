@@ -1,0 +1,11 @@
+# dependencies
+node_modules
+
+# Cypress artifacts
+cypress/screenshots
+cypress/videos
+cypress/reports/*.html
+cypress/reports/*.json
+
+# OS junk
+.DS_Store
