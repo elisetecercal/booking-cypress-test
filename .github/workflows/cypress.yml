@@ -18,6 +18,11 @@ jobs:
         run: |
           pwd
           ls -la
+          echo "--- tree ---"
+          sudo apt-get update && sudo apt-get install -y tree >/dev/null
+          tree -L 2
+          echo "--- package.json head ---"
+          [ -f package.json ] && head -n 30 package.json || echo "package.json NOT FOUND"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -27,13 +32,12 @@ jobs:
 
       - name: Install deps (root)
         run: npm ci
-        working-directory: . # 👈 run at repo root
+        working-directory: .
 
       - name: Run Cypress headless
         run: npx cypress run
-        working-directory: . # 👈 run at repo root
+        working-directory: .
 
-      # Upload artifacts so you (and reviewers) can inspect failures
       - name: Upload Cypress artifacts
         if: always()
         uses: actions/upload-artifact@v4
