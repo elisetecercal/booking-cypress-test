@@ -1,14 +1,20 @@
 name: E2E
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Show workspace files
+      - name: Show workspace files (debug)
         run: |
           pwd
           ls -la
@@ -17,9 +23,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "npm"
 
-      - name: Install deps
+      - name: Install deps (root)
         run: npm ci
+        working-directory: . # 👈 run at repo root
 
       - name: Run Cypress headless
         run: npx cypress run
+        working-directory: . # 👈 run at repo root
+
+      # Upload artifacts so you (and reviewers) can inspect failures
+      - name: Upload Cypress artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
+            cypress/reports
+          if-no-files-found: ignore
