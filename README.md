@@ -4,19 +4,38 @@ This repo demonstrates Cypress end-to-end tests with a Page Object pattern.
 
 ## Scenarios covered
 
-1. **Happy Path**
+### 🧪 Happy Path Scenario 1
 
-   - Go to home
-   - Select destination "Porto" from autocomplete
-   - Pick check-in/out dates (1 → 7 next month)
-   - Submit and verify:
-     - results exist
-     - destination mentions "Porto"
-     - date range shows both days
+````gherkin
+Given I’m on the Booking.com home page
+When I select destination "Porto" from autocomplete
+And I choose check-in and check-out dates (1 → 7 of next month)
+And I keep the default guests option (2 adults)
+And I click "Search"
+Then I see a results list for Porto with the selected dates applied
 
-2. **Edge Case**
 
-   - Open datepicker and verify yesterday is disabled.
+### 📌 Steps to Follow
+
+- Go to home
+- Select destination **"Porto"** from autocomplete
+- Pick check-in / check-out dates (1 → 7 next month)
+- Submit the form and verify:
+  - Results exist
+  - Destination mentions "Porto"
+  - Date range shows both days
+
+### 🧪 Edge Case Scenario
+
+This edge case follows the same flow as the **Happy Path**,
+but instead of selecting future dates, it attempts to pick **past dates**.
+
+```gherkin
+Given I’m on the Booking.com home page
+When I select destination "Porto" from autocomplete
+And I try to choose check-in and check-out dates in the past
+Then I should not be able to select them (they are disabled)
+And no search results should be returned for an invalid date range
 
 ## How to run
 
@@ -24,7 +43,7 @@ This repo demonstrates Cypress end-to-end tests with a Page Object pattern.
 npm install
 npm run cy:open
 npm test
-```
+````
 
 ## Future scenarios to explore
 
@@ -55,11 +74,43 @@ These are not yet automated, but highlight possible extensions of the test suite
 - **Edge cases**
 
   - Leave destination empty and try searching
+
+````gherkin
+Given I’m on the Booking.com home page
+When I leave the destination field empty
+And I select valid check-in and check-out dates
+And I click "Search"
+Then I should see an error or validation message
+And no results should be shown
+
   - Search with only check-in date selected
-  - Search with past dates (expect calendar block)
+```gherkin
+Given I’m on the Booking.com home page
+When I select only a check-in date
+And I leave the check-out date empty
+And I click "Search"
+Then I should see a validation message prompting me to select both dates
+And the search should not continue
+
+  - Booking.com adapts its interface based on the detected user location
+(IP, VPN, or browser settings). This can affect:
+
+- **Currency** (€, $, £, etc.)
+- **Language** (Portuguese, English, etc.)
+- **Date format / Calendar** (DD/MM vs. MM/DD, week starting Sunday vs. Monday)
+
+```gherkin
+Given I’m on the Booking.com home page from a different region (via VPN or browser setting)
+When I select destination "Porto" from autocomplete
+And I choose check-in and check-out dates
+Then the page should:
+  - Display currency consistent with the detected country
+  - Adjust the language appropriately
+  - Show correct date formats and calendar behavior
 
 - **Performance checks**
   - Ensure search results load under X seconds
   - Validate that no JavaScript errors are thrown in console
 
 ---
+````
