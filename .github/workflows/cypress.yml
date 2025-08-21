@@ -32,11 +32,11 @@ jobs:
 
       - name: Install deps (root)
         run: npm ci
-        working-directory: .
+        working-directory: ./booking-cypress-test
 
       - name: Run Cypress headless
         run: npx cypress run
-        working-directory: .
+        working-directory: ./booking-cypress-test
 
       - name: Upload Cypress artifacts
         if: always()
@@ -44,7 +44,7 @@ jobs:
         with:
           name: cypress-artifacts
           path: |
-            cypress/screenshots
-            cypress/videos
-            cypress/reports
+            booking-cypress-test/cypress/screenshots
+            booking-cypress-test/cypress/videos
+            booking-cypress-test/cypress/reports
           if-no-files-found: ignore

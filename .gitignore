@@ -5,7 +5,7 @@ node_modules
 cypress/screenshots
 cypress/videos
 cypress/reports/*.html
-cypress/reports/*.json
+
 
 # OS junk
 .DS_Store
