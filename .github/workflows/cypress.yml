@@ -20,9 +20,7 @@ jobs:
           ls -la
           echo "--- tree ---"
           sudo apt-get update && sudo apt-get install -y tree >/dev/null
-          tree -L 2
-          echo "--- package.json head ---"
-          [ -f package.json ] && head -n 30 package.json || echo "package.json NOT FOUND"
+          tree -L 2 || true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -30,13 +28,11 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: Install deps (root)
+      - name: Install deps
         run: npm ci
-        working-directory: ./booking-cypress-test
 
       - name: Run Cypress headless
         run: npx cypress run
-        working-directory: ./booking-cypress-test
 
       - name: Upload Cypress artifacts
         if: always()
